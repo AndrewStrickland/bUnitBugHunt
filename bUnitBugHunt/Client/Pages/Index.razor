@@ -1,0 +1,48 @@
+﻿@using Blazorise
+@using Blazorise.DataGrid
+@using bUnitBugHunt.Client.Models
+@page "/"
+
+<PageTitle>Sample WASM for bug hunting</PageTitle>
+
+<h1>Remove an entry!</h1>
+
+<br />
+<br />
+<Span>Removed Entry: @removedEntryName</Span>
+<br />
+<br />
+<DataGrid TItem="GridEntry"
+            Data="@entryList" 
+            Filterable="true">
+    <DataGridColumn TItem="GridEntry" Field="@nameof(GridEntry.Name)" Caption="Name" Editable="false">
+        <FilterTemplate>
+            <TextEdit aria-label="Search Name" Placeholder="Search Name" TextChanged="@context.TriggerFilterChange" />
+        </FilterTemplate>
+    </DataGridColumn>
+    <DataGridColumn TItem="GridEntry" Caption="Remove?" Filterable="false">
+        <DisplayTemplate>
+            <Column>
+                <Button aria-label="RemoveButton" Color="Color.Primary" Clicked="() => RemoveEntry(context)">Remove</Button>
+            </Column>
+        </DisplayTemplate>
+    </DataGridColumn>
+</DataGrid>
+
+@code{
+    private List<GridEntry> entryList = new()
+        {
+            new() { Name = "First Entry" },
+            new() { Name = "Second Entry" },
+            new() { Name = "Third Entry" }
+        };
+
+    private string removedEntryName;
+    private bool modalVisible;
+
+    private void RemoveEntry(GridEntry entry)
+    {
+        removedEntryName = entry.Name;
+        entryList.Remove(entry);
+    }
+}
